@@ -23,6 +23,8 @@ CL-USER> (sexp-to-xml (head
                         "baz")
                        ((a :href "http://google.com")
                         "Google")))
+```
+```XML
 <head>
   <title>
     my-site
