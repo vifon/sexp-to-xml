@@ -19,10 +19,12 @@ CL-USER> (sexp-to-xml (head
                         "yellow")
                        (p
                         "foo"
+                        (br)
                         (b "bar")
                         "baz")
                        ((a :href "http://google.com")
-                        "Google")))
+                        "Google")
+                       ((img :src "http://example.com/image.png"))))
 ```
 ```XML
 <head>
@@ -33,6 +35,7 @@ CL-USER> (sexp-to-xml (head
 <body bgcolor="yellow">
   <p>
     foo
+    <br />
     <b>
       bar
     </b>
@@ -41,14 +44,9 @@ CL-USER> (sexp-to-xml (head
   <a href="http://google.com">
     Google
   </a>
+  <img src="http://example.com/image.png" />
 </body>
 ```
-
-MISSING FEATURES
-================
-
-Currently there is no support for empty element tags (`<br />`). It
-may or may not be added later.
 
 AUTHOR
 ======
