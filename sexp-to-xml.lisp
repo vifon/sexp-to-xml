@@ -78,11 +78,24 @@
                                     (*indent* nil))
                                 (reverse (sexp-to-xml--new-tag sexp)))))))
 
-
 (defmacro sexp-to-xml (&rest sexps)
-  `(with-open-file (output #p"output.xml"
-                        :direction :output
-                        :if-exists :supersede)
-    (format output "~a"
+  `(format *standard-output* "~a"
            (sexp-to-xml-unquoted ,@(loop for sexp in sexps collecting
-                                        `(quote ,sexp))))))
+                                        `(quote ,sexp)))))
+(defun file-get-contents (filename)
+  (with-open-file (stream filename)
+    (let ((contents (make-string (file-length stream))))
+      (read-sequence contents stream)
+      contents)))
+
+(defun file-get-lines (filename)
+  (with-open-file (stream filename)
+    (loop for line = (read-line stream nil)
+          while line
+          collect line)))
+
+(defun test()
+  (let((input (file-get-contents "sample.sexp")))
+    (format t (sexp-to-xml-unquoted (read-from-string input)))
+  )
+)
