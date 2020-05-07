@@ -71,10 +71,12 @@
           *output*)))
 
 (defun sexp-to-xml-unquoted (&rest sexps)
+  (apply #'concatenate 'string
+         (apply #'concatenate 'list
                          (loop for sexp in sexps collecting
                               (let ((*output* nil)
                                     (*indent* nil))
-                                (reverse (sexp-to-xml--new-tag sexp)))))
+                                (reverse (sexp-to-xml--new-tag  sexp)))))))
 
 (defmacro sexp-to-xml (&rest sexps)
   `(format *standard-output* "~a"
@@ -147,10 +149,26 @@
   (let((input (file-get-contents "sample2.sexp")))
     (loop for sexp in  (tokenize input) do (
       with-input-from-string (s (write-to-string sexp) ) 
-      (print ( sexp-to-xml-unquoted (read s)) )
+        (print ( sexp-to-xml-unquoted (read s)) )
       
       )
     )
   )
 )
 
+
+(defun test7()
+  (let((input (file-get-contents "sample2.sexp")))
+    (loop for sexp in  (tokenize input) do (
+      print sexp
+
+      )
+    )
+  )
+)
+
+(defun test8()
+  (let((input (file-get-contents "sample2.sexp")))
+    (format t (sexp-to-xml-unquoted (read-from-string input)))
+  )
+)
