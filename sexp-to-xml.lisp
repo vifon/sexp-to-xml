@@ -71,12 +71,10 @@
           *output*)))
 
 (defun sexp-to-xml-unquoted (&rest sexps)
-  (apply #'concatenate 'string
-         (apply #'concatenate 'list
                          (loop for sexp in sexps collecting
                               (let ((*output* nil)
                                     (*indent* nil))
-                                (reverse (sexp-to-xml--new-tag sexp)))))))
+                                (reverse (sexp-to-xml--new-tag sexp)))))
 
 (defmacro sexp-to-xml (&rest sexps)
   `(format *standard-output* "~a"
@@ -94,8 +92,65 @@
           while line
           collect line)))
 
-(defun test()
-  (let((input (file-get-contents "sample.sexp")))
-    (format t (sexp-to-xml-unquoted (read-from-string input)))
+(defun list-to-string (lst)
+    (format nil "~{~A~}" lst))
+
+
+(defun test1()
+  (let((input (file-get-contents "sample2.sexp")))
+    (format t (sexp-to-xml-unquoted (read-from-string "(head (title \"my-site\"))")))
   )
 )
+
+(defun test2()
+  (let((input (file-get-lines "sample2.sexp")))
+    (loop for sexp in input do (print (write-to-string sexp)))
+  )
+)
+
+(defun test3()
+  (let((input (file-get-lines "sample2.sexp")))
+    (format t (list-to-string input))
+  )
+)
+
+
+(defun :str->lst (str / i lst)
+  (repeat (setq i (strlen str))
+    (setq lst (cons (substr str (1+ (setq i (1- i))) 1) lst)))) 
+
+(defun print-elements-recursively (list)
+ (when list                            ; do-again-test
+       (print (car list))              ; body
+       (print-elements-recursively     ; recursive call
+        (cdr list))))                  ; next-step-expression
+
+
+(defun tokenize( str )(read-from-string (concatenate 'string "(" str
+")")))
+
+
+(defun test4()
+  (let((input (file-get-contents "sample2.sexp")))
+    (print-elements-recursively (tokenize input) )
+  )
+)
+
+
+(defun test5()
+  (let((input (file-get-contents "sample2.sexp")))
+    (print (sexp-to-xml-unquoted (tokenize input)))
+  )
+)
+
+(defun test6()
+  (let((input (file-get-contents "sample2.sexp")))
+    (loop for sexp in  (tokenize input) do (
+      with-input-from-string (s (write-to-string sexp) ) 
+      (print ( sexp-to-xml-unquoted (read s)) )
+      
+      )
+    )
+  )
+)
+
