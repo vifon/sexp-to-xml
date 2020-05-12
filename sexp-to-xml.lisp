@@ -70,16 +70,10 @@
                       'end)
           *output*)))
 
-(defun sexp-to-xml-unquoted (&rest sexps)
+(defun sexp-to-xml (&rest sexps)
   (apply #'concatenate 'string
          (apply #'concatenate 'list
-                         (loop for sexp in sexps collecting
-                              (let ((*output* nil)
-                                    (*indent* nil))
-                                (reverse (sexp-to-xml--new-tag sexp)))))))
-
-
-(defmacro sexp-to-xml (&rest sexps)
-  `(format *standard-output* "~a"
-           (sexp-to-xml-unquoted ,@(loop for sexp in sexps collecting
-                                        `(quote ,sexp)))))
+                (loop for sexp in sexps collecting
+                     (let ((*output* nil)
+                           (*indent* nil))
+                       (reverse (sexp-to-xml--new-tag sexp)))))))
