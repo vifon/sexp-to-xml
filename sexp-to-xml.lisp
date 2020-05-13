@@ -36,7 +36,7 @@
             (sexp-to-xml--inside-tag (cdr sexp)))
           (progn
             (push (format-tag
-                   (string (car sexp)))
+                   (princ-to-string (car sexp)))
                   *output*)
             (sexp-to-xml--inside-tag (cdr sexp))))))
 
